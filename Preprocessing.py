@@ -1,70 +1,55 @@
 #!/usr/bin/env python
 # coding: utf-8
-"""
-Created by Imane 
-"""
 
-import pandas as pd
-import numpy as np
+def preprocessing(f, missing_values=['NaN'], irrelevant_features=[], chars=[], categorical_features=[]):
+    
+    import pandas as pd
+    import numpy as np
+    from sklearn.impute import SimpleImputer
+    
+    #loading the dataset in a pandas dataframe
+    df = pd.read_csv(f, na_values = missing_values)
 
-#df1 = pd.read_csv("/Users/HP/Desktop/PROJECTS/ML/data_banknote_authentication.txt")
-df = pd.read_csv("/Users/HP/Desktop/PROJECTS/ML/kidney_disease.csv")
+    #dropping irrelevant data
+    for f in irrelevant_features:
+        df = df.drop(f,axis=1)
 
-print(df.head())
+    #storing features names
+    names = df.columns 
 
+    #remove unnecessary string characters like tabulation etc
+    str_features = [f for f in names if df[f].dtypes==object]
+    for c in chars:
+        for feature in str_features:
+            df[feature] = df[feature].str.replace(c, '')
 
-#  Data Summary
+    #filling missing values
+    for feature in names:
+        if df[feature].dtypes == float:
+            mean = round(df[feature].mean())
+            df[feature].fillna(mean,inplace=True) #fill with the mean value over the column if it's numerical
+        else:
+            df[feature].fillna(df[feature].mode()[0],inplace=True) #fill with most frequent value if it's not numerical
 
-columns = list(df.columns)
+    #encoding categorical features
+    for f in categorical_features:
+        dummies = pd.get_dummies(df[f],prefix=str(f))
+        df = pd.concat([df,dummies],axis=1)
+        df.drop(f,axis=1,inplace=True)
 
-print("Number of features:" ,len(df.loc[0]))
-print("Number of samples:" ,len(df))
-print("Features names:" ,columns)
-
-
-# a dictionnary to display the type of each feature 
-#this is an important information that will help us choosing the method to replace the missing values
-types_dict = dict()
-for col in columns:
-    types_dict[col] = type(df.loc[0][col])
-types_dict['rbc'] = str
-types_dict
-
-
-
-
-# an array showing the number of missing values in each feature
-print (df.isnull().sum())
-
-
-# ### Replacing missing values
-
-from sklearn.impute import SimpleImputer
-
-#imputer for features of numerical type: replaces each missing value "NaN" with the median
-imp_num = SimpleImputer(missing_values=np.NaN, strategy='median')
-
-#imputer for features of string type: replaces each missing value "NaN" with the most frequent value in the column
-imp_str = SimpleImputer(missing_values=np.NaN, strategy='most_frequent')
-
-#we separate columns of str type and numerical type according to the types dictionnary defined above
-for i in range(5):
-    imp_num = imp_num.fit(df.loc[:,[columns[i],columns[i+1]]])  
-    df.loc[:,[columns[i],columns[i+1]]] = imp_num.transform(df.loc[:,[columns[i],columns[i+1]]])
-for i in range(6,9):
-    imp_str = imp_str.fit(df.loc[:,[columns[i],columns[i+1]]])  
-    df.loc[:,[columns[i],columns[i+1]]] = imp_str.transform(df.loc[:,[columns[i],columns[i+1]]])
-for i in range(10,15):
-    imp_num = imp_num.fit(df.loc[:,[columns[i],columns[i+1]]])  
-    df.loc[:,[columns[i],columns[i+1]]] = imp_num.transform(df.loc[:,[columns[i],columns[i+1]]])
-for i in range(16,25):
-    imp_str = imp_str.fit(df.loc[:,[columns[i],columns[i+1]]])  
-    df.loc[:,[columns[i],columns[i+1]]] = imp_str.transform(df.loc[:,[columns[i],columns[i+1]]])
-
-#check if all missing values have been replaced
-print(df.isnull().values.any())
+    #separating labels and data
+    label = df[df.columns[-1]].to_numpy()
+    data = df.drop(df.columns[-1], axis=1).to_numpy()
+    
+    return([data,label,names])
 
 
 
 
+#f = "/Users/HP/Desktop/PROJECTS/ML/kidney_disease.csv"
+#missing_values = ["NaN","nan","\t?"]
+#irrelevant_features = ["id"]
+#chars = ['\t', ' ']
+#categorical_features = ["pc","rbc","pcc","ba","htn","dm","cad","appet","pe","ane","classification"]
+#preprocessing(f, missing_values, irrelevant_features, chars, categorical_features)
 
