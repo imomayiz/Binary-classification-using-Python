@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
 
 def check_header(df):
     """
@@ -71,7 +72,7 @@ def preprocessing(f, missing_values, irrelevant_features, chars, categorical_fea
         df = df.drop(f,axis=1)
     
     #storing columns names 
-    names = df.columns
+    names = df.columns.to_list()
     
     #remove unnecessary string characters like tabulation etc
     str_features = [f for f in names if df[f].dtypes==object]
@@ -93,9 +94,6 @@ def preprocessing(f, missing_values, irrelevant_features, chars, categorical_fea
         df = pd.concat([df,dummies],axis=1)
         df.drop(f,axis=1,inplace=True)
         df.drop(dummies.columns[0],axis=1,inplace=True)
-        
-    #storing the new features names
-    names = df.columns
 
     #separating labels and data
     label = df[df.columns[-1]].to_numpy()
@@ -137,18 +135,33 @@ def tsne(datalist, n):
     data_transformed = model.fit_transform(datalist[0])
     return [data_transformed, datalist[1], ["feature_"+str(i) for i in range(1,n+1)]]
 
-if __name__ == '__main__':
+def preprocessing_main():
+    """
+    Author: Guillaume S\n
+    TO BE MODIFYED. Return [data,label,names] lists for both dataset, with original data, pca and t-sne.
+    For the moment : scatter plot -> find how many components we want to keep
+    
+    """
     f = "kidney_disease.csv"
-    #f = "data_banknote_authentication.txt"
+    f2 = "data_banknote_authentication.txt"
+    names = ['variance','skewness','curtosis','entropy','class']
     missing_values = ["NaN","nan","\t?"]
     irrelevant_features = ["id"]
     chars = ['\t', ' ']
     categorical_features = ["pc","rbc","pcc","ba","htn","dm","cad","appet","pe","ane","classification"]
     l = preprocessing(f, missing_values, irrelevant_features, chars, categorical_features)
-    #l = preprocessing(f,[],[],[],[],names)
-    l2 = pca(l,2)
-    #l2 = tsne(l,3)
-    print(l2)
+    l2 = preprocessing(f2,[],[],[],[],names)
+    l_pca = pca(l,2)
+    l2_pca = pca(l2,2)
+    print(l2_pca)
+    #l_tsne = tsne(l,2)
+    l2_tsne = tsne(l2,2)
+    plt.scatter(l2_tsne[0][:,0],l2_tsne[0][:,1], c=l2_tsne[1])
+    #plt.scatter(l2_pca[0][:,0],l2_pca[0][:,1], c=l2_pca[1])
+    plt.show()
+
+if __name__ == '__main__':
+    preprocessing_main()
 
 
 ##Examples
