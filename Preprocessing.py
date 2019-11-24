@@ -10,9 +10,7 @@ def check_header(df):
     we consider that the dataframe has no header.
     
     """
-    def check_header(df):
     i = 0 #counter of numerical values
-    
     for f in df.columns:
         try:
             int(f)
@@ -20,10 +18,8 @@ def check_header(df):
             break #if int(f) outputs no error it means that we detected a numerical value in the header
         except ValueError:
             pass
-        
     if i!=0:
             return(False)
-            
     return(True)
 
 
