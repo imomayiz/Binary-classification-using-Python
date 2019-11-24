@@ -2,13 +2,22 @@
 # coding: utf-8
 
 
+import pandas as pd
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
 def check_header(df):
     """
-    Description: 
-    This function takes a dataframe as an input and outputs True if the dataframe contains a header and False otherwise.
-    We consider the header to be a list of only string elements. Hence, we if we detect one numerical element in the dataframe's columns then
-    we consider that the dataframe has no header.
+    @author: Imane M
+    Check if a dataframe contains a header (list of only string elements)
+    If we detect one numerical element in the dataframe's columns then we consider that the dataframe has no header.
     
+    Args:
+        df: pandas dataframe
+    
+    Returns:
+        True if the dataframe contains a header and False otherwise
     """
     i = 0 #counter of numerical values
     for f in df.columns:
@@ -23,41 +32,30 @@ def check_header(df):
     return(True)
 
 
-
-
-
 def preprocessing(f, missing_values, irrelevant_features, chars, categorical_features, header=[]):
     """
-    Description:
-    This function cleans the dataset by deleting irrelevant columns and replacing the missing values. Afterwards, it encodes the categorical 
-    features.
-    It returns a list where the first element is a numpy array of the data (without the labels), the second is a numpy array of the labels
-    and the last one is the list of features+labels names.
+    @author: Imane M
+    Load and clean the dataset by deleting irrelevant columns and replacing the missing values, encode the categorical features.
     
-    Parameters:
-    - f: path of the dataset to load
+    Args:
+        f: relative path of the dataset to load
+        
+        missing_values: list of values that should be considered as missing, for instance: NaN,'na','?','--' etc. They are replaced with either the mean (in the case of numerical values) or the most frequent value (in the case of string values). Please pass an empty list if there are no missing values in your dataset.
+        
+        irrelevant_features: list of features that are not relevant for the training, for instance the 'id' of patients. These features are deleted in our function. Please pass an empty list if you have no irrelevant features to declare.
+        
+        chars: list of string characters to omit usually referring to separators like '\t' or ' ' respectively for tabulation and space. Please pass an empty list if you have no characters to declare.
+        
+        categorical_features: features referring to categories, they are encoded using pandas dummies. Please pass an empty list if there are no categorical features in the dataset.
+        
+        header: Initialized to an empty list. If a header is given though, sets the list to columns names of the dataframe. If not given and if the dataset already has a header then the function works with the latter. Otherwise (ie no initial header and no header passed to the function's parameters), the function returns an error.
     
-    - missing_values: list of values that should be considered as missing, for instance: NaN,'na','?','--' etc
-    They are replaced with either the mean (in the case of numerical values) or the most frequent value (in the case of string values).
-    Please pass an empty list if there are no missing values in your dataset.
-    
-    - irrelevant_features: list of features that are not relevant for the training, for instance the 'id' of patients. These features are deleted 
-    in our function. Please pass an empty list if you have no irrelevant features to declare.
-    
-    - chars: list of string characters to omit usually referring to separators like '\t' or ' ' respectively for tabulation and space.
-    Please pass an empty list if you have no characters to declare.
-    
-    - categorical_features: features referring to categories, they are encoded using pandas dummies. 
-    Please pass an empty list if there are no categorical features in the dataset.
-    
-    - header: Initialized to an empty list. If a header is given though, sets the list to columns names of the dataframe.
-    If not given and if the dataset already has a header then the function works with the latter.
-    Otherwise (ie no initial header and no header passed to the function's parameters), the function returns an error.
+    Returns:
+        List composed of original data as numpy array (without the labels), label as numpy array of dimension 1, list of feature+label names.
     """
     
-    #libraries to import
-    import pandas as pd
-    import numpy as np
+    #loading the dataset in a pandas dataframe
+    df = pd.read_csv(f, na_values = missing_values)
     
     #setting the header
     if check_header(df): #function defined above
@@ -105,6 +103,52 @@ def preprocessing(f, missing_values, irrelevant_features, chars, categorical_fea
     
     return([data,label,names])
 
+
+def pca(datalist, n):
+    """
+    @author: Guillaume S
+    Transform original data to data with n features, generated by PCA algorithm.
+    
+    Args:
+        datalist: list returned by function "preprocessing"
+        n: number of components from PCA algorithm to keep (integer)
+
+    Returns:
+        Transformed data (thanks to PCA) as numpy array, label as numpy array of dimension 1, list of feature names ("feature_i").
+    """
+    model = PCA(n_components=n)
+    data_transformed = model.fit_transform(datalist[0])
+    return [data_transformed, datalist[1], ["feature_"+str(i) for i in range(1,n+1)]]
+
+
+def tsne(datalist, n):
+    """
+    @author: Guillaume S
+    Transform original data to data with n features, generated by t-SNE algorithm.
+    
+    Args:
+        datalist: list returned by function "preprocessing"
+        n: number of components from t-SNE algorithm to keep (integer)
+
+    Returns:
+        Transformed data (thanks to t-SNE) as numpy array, label as numpy array of dimension 1, list of feature names ("feature_i").
+    """
+    model = TSNE(n_components=n)
+    data_transformed = model.fit_transform(datalist[0])
+    return [data_transformed, datalist[1], ["feature_"+str(i) for i in range(1,n+1)]]
+
+if __name__ == '__main__':
+    f = "kidney_disease.csv"
+    #f = "data_banknote_authentication.txt"
+    missing_values = ["NaN","nan","\t?"]
+    irrelevant_features = ["id"]
+    chars = ['\t', ' ']
+    categorical_features = ["pc","rbc","pcc","ba","htn","dm","cad","appet","pe","ane","classification"]
+    l = preprocessing(f, missing_values, irrelevant_features, chars, categorical_features)
+    #l = preprocessing(f,[],[],[],[],names)
+    l2 = pca(l,2)
+    #l2 = tsne(l,3)
+    print(l2)
 
 
 ##Examples
