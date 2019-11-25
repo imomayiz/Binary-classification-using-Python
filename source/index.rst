@@ -13,4 +13,5 @@ Welcome to ml-project's documentation!
    Preprocessing.rst
    modules.rst
    Classification.rst
+   neuralNetwork.rst
 
