@@ -138,8 +138,10 @@ def tsne(datalist, n):
 def preprocessing_main():
     """
     Author: Guillaume S\n
-    TO BE MODIFYED. Return [data,label,names] lists for both dataset, with original data, pca and t-sne.
-    For the moment : scatter plot -> find how many components we want to keep
+    Generate [data,label,names] lists for both dataset : original data, pca and t-sne for each.
+    
+    Returns:
+        kidney original list, banknote original list, kidney pca list, banknote pca list, sidney t-sne list, banknote t-sne list.
     
     """
     f = "kidney_disease.csv"
@@ -153,12 +155,12 @@ def preprocessing_main():
     l2 = preprocessing(f2,[],[],[],[],names)
     l_pca = pca(l,2)
     l2_pca = pca(l2,2)
-    print(l2_pca)
-    #l_tsne = tsne(l,2)
+    l_tsne = tsne(l,2)
     l2_tsne = tsne(l2,2)
-    plt.scatter(l2_tsne[0][:,0],l2_tsne[0][:,1], c=l2_tsne[1])
+    #plt.scatter(l2_tsne[0][:,0],l2_tsne[0][:,1], c=l2_tsne[1])
     #plt.scatter(l2_pca[0][:,0],l2_pca[0][:,1], c=l2_pca[1])
-    plt.show()
+    #plt.show()
+    return l,l2,l_pca,l2_pca,l_tsne,l2_tsne
 
 if __name__ == '__main__':
     preprocessing_main()

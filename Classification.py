@@ -4,6 +4,7 @@ Created on Sat Nov 23 16:57:56 2019
 
 @author: Romain N
 """
+import Preprocessing
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -62,3 +63,6 @@ def display2components(X,y) :
     plt.scatter(X0,X1,c=y)
     return
 
+if __name__ == '__main__':
+    l,l2,l_pca,l2_pca,l_tsne,l2_tsne = Preprocessing.preprocessing_main()
+    print(l2)
