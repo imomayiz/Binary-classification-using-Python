@@ -56,7 +56,10 @@ def preprocessing(f, missing_values, irrelevant_features, chars, categorical_fea
     """
     
     #loading the dataset in a pandas dataframe
-    df = pd.read_csv(f, na_values = missing_values)
+    if header != []:
+        df = pd.read_csv(f, na_values = missing_values, names=header)
+    else:
+        df = pd.read_csv(f, na_values = missing_values)
     
     #setting the header
     if check_header(df): #function defined above
@@ -163,7 +166,10 @@ def preprocessing_main():
     return l,l2,l_pca,l2_pca,l_tsne,l2_tsne
 
 if __name__ == '__main__':
-    preprocessing_main()
+    l,l2,l_pca,l2_pca,l_tsne,l2_tsne = preprocessing_main()
+    print(l[0].shape)
+    print("-----")
+    print(l2[0].shape)
 
 
 ##Examples
