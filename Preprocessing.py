@@ -171,29 +171,41 @@ def preprocess_main():
         kidney original list, banknote original list, kidney pca list, banknote pca list, sidney t-sne list, banknote t-sne list.
     
     """
+    #kidney_disease dataset
     f = "kidney_disease.csv"
-    f2 = "data_banknote_authentication.txt"
-    names = ['variance','skewness','curtosis','entropy','class']
     missing_values = ["NaN","nan","\t?"]
     irrelevant_features = ["id"]
     chars = ['\t', ' ']
     categorical_features = ["pc","rbc","pcc","ba","htn","dm","cad","appet","pe","ane","classification"]
     l = preprocess(f, missing_values, irrelevant_features, chars, categorical_features)
+
+    #banknote dataset
+    f2 = "data_banknote_authentication.txt"
+    names = ['variance','skewness','curtosis','entropy','class']
     l2 = preprocess(f2,[],[],[],[],names)
+    
+    #PCA
     l_pca = pca(l,2)
     l2_pca = pca(l2,2)
+
+    #TSNE
     l_tsne = tsne(l,2)
     l2_tsne = tsne(l2,2)
+
+    #data split
+    X_train, X_test, y_train, y_test = split_data(l[0],l[1])
+    X2_train, X2_test, y2_train, y2_test = split_data(l2[0],l2[1])
+
+    ddict = {"data": l[0], "labels": l[1], "names": l[2], "data_train": X_train, "data_test": X_test, "label_train": y_train, "label_test": y_test}
+    ddict2 = {"data": l2[0], "labels": l2[1], "names": l2[2], "data_train": X2_train, "data_test": X2_test, "label_train": y2_train, "label_test": y2_test}
     #plt.scatter(l2_tsne[0][:,0],l2_tsne[0][:,1], c=l2_tsne[1])
     #plt.scatter(l2_pca[0][:,0],l2_pca[0][:,1], c=l2_pca[1])
     #plt.show()
-    return l,l2,l_pca,l2_pca,l_tsne,l2_tsne
+    return ddict,ddict2,l_pca,l2_pca,l_tsne,l2_tsne
 
 if __name__ == '__main__':
-    l,l2,l_pca,l2_pca,l_tsne,l2_tsne = preprocess_main()
-    print(l[0].shape)
-    print("-----")
-    print(l2[0].shape)
+    ddict,ddict2,l_pca,l2_pca,l_tsne,l2_tsne = preprocess_main()
+    
 
 
 ##Examples
