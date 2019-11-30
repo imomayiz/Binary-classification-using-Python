@@ -76,7 +76,6 @@ def CreateTree(train_X, train_Y, feature_names, class_names, criterion='gini', m
     return clf, graph
 
 
-#Mesure de précision
 def AccuracyTree(test_X, test_Y, clf):
     """
     Author: Thomas K\n
@@ -93,89 +92,38 @@ def AccuracyTree(test_X, test_Y, clf):
     return accuracy
 
 
-'''
-A CONTINUER
-
-#With cross validation
-scores = cross_val_score(clfGini, iris.data, iris.target, cv=10)
-print("Accuracy of Gini: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-scores = cross_val_score(clfEntropy, iris.data, iris.target, cv=10)
-print("Accuracy of Entropy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-scores = cross_val_score(dummy, iris.data, iris.target, cv=10)
-print("Accuracy of Dummy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-scores = cross_val_score(classifier, iris.data, iris.target, cv=10)
-print("Accuracy of KNN: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-
-
-#Changing number of minimum observations for a node
-iArray=[]
-scores=[]
-for i in range(2,100):
-    clfNode = tree.DecisionTreeClassifier( min_samples_split=i)
-    clfNode = clfNode.fit(train_X,train_y)
-    scoreBuffer=cross_val_score(clfNode, iris.data, iris.target, cv=10)
-    scores.append(scoreBuffer.mean())
-    iArray.append(i)
-plt.plot(iArray, scores)
-plt.show()
+def CrossValidationAccuracy(X, Y, classifier):
+    """
+    Author: Thomas K\n
+    Computes a classifier's accuracy
+    Args:
+        X : the complete dataset values
+        Y : the complete dataset labels
+        clf : a classifier
+    Returns:
+        An array of scores of the estimator for each run of the cross validation.
+    """
+    scores = cross_val_score(clf, X, Y, cv=10)
+    print("Accuracy : %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+    return scores
 
 
-#Changing number of minimum sample by leaf
-iArray=[]
-scores=[]
-for i in range(1,100):
-    clfNode = tree.DecisionTreeClassifier(min_samples_leaf=i)
-    clfNode = clfNode.fit(train_X,train_y)
-    scoreBuffer=cross_val_score(clfNode, iris.data, iris.target, cv=10)
-    scores.append(scoreBuffer.mean())
-    iArray.append(i)
-plt.plot(iArray, scores)
-plt.show()
+def DummyClassifier(train_X, train_Y):
+    """
+    Author: Thomas K\n
+    Creates a dummy classifier
+    Args:
+        train_X : training dataset values, numpy array returned by function 'DataSplit'
+        train_Y : training dataset labels, numpy array returned by function 'DataSplit'
+    Returns:
+        A dummy classifier fited with the training dataset
+    """
+    # Create dummy classifer
+    dummy = DummyClassifier(strategy='uniform', random_state=1)
+    # "Train" model
+    dummy.fit(train_X, train_y)
+    return dummy
 
-
-
-#Changing number of minimum observations for a node for KNN classifier
-iArray=[]
-scores=[]
-for i in range(2,100):
-    classifier = tree.DecisionTreeClassifier( min_samples_split=i)
-    classifier = classifier.fit(train_X,train_y)
-    scoreBuffer=cross_val_score(classifier, iris.data, iris.target, cv=10)
-    scores.append(scoreBuffer.mean())
-    iArray.append(i)
-plt.plot(iArray, scores)
-plt.show()
-
-
-
-#Changing number of minimum sample by leaf for KNN
-iArray=[]
-scores=[]
-for i in range(1,100):
-    classifier = tree.DecisionTreeClassifier(min_samples_leaf=i)
-    classifier = classifier.fit(train_X,train_y)
-    scoreBuffer=cross_val_score(classifier, iris.data, iris.target, cv=10)
-    scores.append(scoreBuffer.mean())
-    iArray.append(i)
-plt.plot(iArray, scores)
-plt.show()
-
-
-
-#LDA
-
-# Instantiate learning model (n = 1)
-lda = LDA(n_components=1)
-
-# Fitting the model
-lda.fit(train_X, train_y)
-
-# Predicting the Test set results
-y_pred = lda.predict(test_X)
-
-accuracy = metrics.accuracy_score(test_y, y_pred)
-print(accuracy)
-'''
 
 if __name__ == '__main__':
     l,l2,l_pca,l2_pca,l_tsne,l2_tsne = Preprocessing.preprocessing_main()
