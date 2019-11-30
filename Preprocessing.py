@@ -113,21 +113,6 @@ def preprocess(f, missing_values, irrelevant_features, chars, categorical_featur
     
     return([data,label,names])
 
-def split_data(data,labels,test_size=0.25):
-    """
-    Author: Imane M\n
-    Splits data into training set and test set
-
-    Args:
-        data : preprocessed data, first element of output list of the function "preprocess"
-        labels : preprocessed labels, second element of output list of the function "preprocess"
-        test_size : the absolute number of the test samples, default value is 0.25
-
-    Returns:
-        np.array [data_train, data_test, labels_train, labels_test]
-    """
-    X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=test_size)
-    return (np.array([X_train, X_test, y_train, y_test]))
 
 def pca(datalist, n):
     """
