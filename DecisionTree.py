@@ -103,12 +103,12 @@ def CrossValidationAccuracy(X, Y, classifier):
     Returns:
         An array of scores of the estimator for each run of the cross validation.
     """
-    scores = cross_val_score(clf, X, Y, cv=10)
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("Accuracy : %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
     return scores
 
 
-def DummyClassifier(train_X, train_Y):
+def DummyClassifier(train_X, train_y):
     """
     Author: Thomas K\n
     Creates a dummy classifier
