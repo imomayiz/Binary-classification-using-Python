@@ -29,7 +29,7 @@ def create_tree(datadict, class_names=None,feature_names=None):
     """
     #Create tree
     clf = tree.DecisionTreeClassifier()
-    parameters = {'criterion' : ['gini', 'entropy'],'max_depth':[i for i in range(2,100)], 'min_samples_split':[i for i in range(2,100)], 'min_samples_leaf':[i for i in range(1,100)] }
+    parameters = {'criterion' : ['gini', 'entropy'],'max_depth':[2,10,20,50,80], 'min_samples_split':[2,5,10,20,40,70], 'min_samples_leaf':[2,5,10,20,40,70] }
     model = GridSearchCV(clf,parameters, cv = 5, refit = True)
     #Train tree
     model = model.fit(datadict.get("data_train"),datadict.get("label_train"))
