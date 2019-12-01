@@ -5,6 +5,7 @@ from sklearn import tree
 from sklearn import metrics
 from sklearn.dummy import DummyClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
 import random
 from matplotlib import style
 from mpl_toolkits.mplot3d import Axes3D
@@ -13,31 +14,29 @@ import graphviz
 style.use("ggplot")
 
 
-def create_tree(datadict, class_names=None,feature_names=None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+def create_tree(datadict, class_names=None,feature_names=None):
     """
     Author: Thomas K\n
-    Builds a decision tree from a training set
+    Builds a the best decision tree from a training set using GridSearchCV
 
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
         class_names :Names of each of the target classes in ascending numerical order
         feature_names :Names of each of the features
-        criterion: 'gini' or 'entropy', criterion to use
-        max_depth: int or None, maximum depth of the tree
-        min_samples_split: int, the minimum number of samples required to split an internal node
-        min_samples_leaf: int or float, the minimum number of samples required to be at a leaf node
 
     Returns:
         Decision tree fited with the training dataset, graph view of the tree
     """
     #Create tree
-    clf = tree.DecisionTreeClassifier(criterion=criterion,max_depth=max_depth,min_samples_split=min_samples_split,min_samples_leaf=min_samples_leaf)
+    clf = tree.DecisionTreeClassifier()
+    parameters = {'criterion' : ['gini', 'entropy'],'max_depth':[i for i in range(2,100)], 'min_samples_split':[i for i in range(2,100)], 'min_samples_leaf':[i for i in range(1,100)] }
+    model = GridSearchCV(clf,parameters, cv = 5, refit = True)
     #Train tree
-    clf = clf.fit(datadict.get("data_train"),datadict.get("label_train"))
+    model = model.fit(datadict.get("data_train"),datadict.get("label_train"))
     #Create the graph view of the tree
-    dot_data = tree.export_graphviz(clf, out_file=None, filled=True,feature_names=feature_names, class_names=class_names)
+    dot_data = tree.export_graphviz(model.best_estimator_, out_file=None, filled=True,feature_names=feature_names, class_names=class_names)
     graph = graphviz.Source(dot_data)
-    return clf, graph
+    return model.best_estimator_, graph
 
 
 def accuracy_tree(datadict, clf):
@@ -93,7 +92,7 @@ def dummy_classifier(datadict):
     accuracy = metrics.accuracy_score(datadict.get("label_test"), label_pred)
     return accuracy
 
-def decisiontree_main(datadict,class_names=None, feature_names = None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+def decisiontree_main(datadict,class_names=None, feature_names = None):
     """
     Author: Thomas K\n
     Builds a decision tree and compute the accuracy
@@ -102,15 +101,11 @@ def decisiontree_main(datadict,class_names=None, feature_names = None, criterion
         datadict : dictionary returned by Preprocessing.preprocessing_main
         class_names :Names of each of the target classes in ascending numerical order
         feature_names :Names of each of the features
-        criterion : 'gini' or 'entropy'
-        max_depth : int or None, maximum depth of the tree
-        min_samples_split : int, the minimum number of samples required to split an internal node
-        min_samples_leaf : int or float, the minimum number of samples required to be at a leaf node
-    
+
     Returns:
         A decision tree fited with the training dataset, a graph view of the tree, the accuracy using cross validation, the accuracy without cross validation
     """
-    clf, graph = create_tree(datadict, class_names,feature_names, criterion=criterion, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf)
+    clf, graph = create_tree(datadict, class_names,feature_names)
     #Accuracy using cross validation
     scores = cross_validation_accuracy(datadict, clf)
     #Accuracy without cross validation
