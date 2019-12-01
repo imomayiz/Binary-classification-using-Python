@@ -16,19 +16,20 @@ import graphviz
 style.use("ggplot")
 
 
-def create_tree(datadict, class_names=None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+def create_tree(datadict, class_names=None,feature_names=None criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
     """
     Author: Thomas K\n
     Builds a decision tree from a training set
 
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
-        class_names: A REMPLIR THOMAS !
+        class_names :Names of each of the target classes in ascending numerical order
+        feature_names :Names of each of the features
         criterion: 'gini' or 'entropy', criterion to use
         max_depth: int or None, maximum depth of the tree
         min_samples_split: int, the minimum number of samples required to split an internal node
         min_samples_leaf: int or float, the minimum number of samples required to be at a leaf node
-    
+
     Returns:
         Decision tree fited with the training dataset, graph view of the tree
     """
@@ -46,11 +47,11 @@ def accuracy_tree(datadict, clf):
     """
     Author: Thomas K\n
     Computes the tree's accuracy
-    
+
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
         clf : decision tree returned by function 'CreateTree'
-    
+
     Returns:
         Accuracy of the tree on the testing dataset
     """
@@ -63,11 +64,11 @@ def cross_validation_accuracy(datadict, classifier):
     """
     Author: Thomas K\n
     Computes a classifier's accuracy
-    
+
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
         clf : a classifier
-    
+
     Returns:
         Array of scores of the estimator for each run of the cross validation
     """
@@ -80,10 +81,10 @@ def dummy_classifier(datadict):
     """
     Author: Thomas K\n
     Creates a dummy classifier
-    
+
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
-    
+
     Returns:
         Accuracy of the dummy classifier on the training dataset
     """
@@ -95,8 +96,31 @@ def dummy_classifier(datadict):
     accuracy = metrics.accuracy_score(datadict.get("label_test"), label_pred)
     return accuracy
 
+def DecisionTreeMain(datadict,class_names=None, feature_names = None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+    """
+    Author: Thomas K\n
+    Builds a decision tree and compute the accuracy
+
+    Args:
+        datadict : dictionary returned by Preprocessing.preprocessing_main
+        class_names :Names of each of the target classes in ascending numerical order
+        feature_names :Names of each of the features
+        criterion : 'gini' or 'entropy'
+        max_depth : int or None, maximum depth of the tree
+        min_samples_split : int, the minimum number of samples required to split an internal node
+        min_samples_leaf : int or float, the minimum number of samples required to be at a leaf node
+    Returns:
+        A decision tree fited with the training dataset, a graph view of the tree, the accuracy using cross validation, the accuracy without cross validation
+    """
+    clf, graph = create_tree(datadict, class_names,feature_names, criterion=criterion, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf)
+    #Accuracy using cross validation
+    scores = CrossValidationAccuracy(datadict, clf)
+    #Accuracy without cross validation
+    accuracy = AccuracyTree(datadict, clf)
+    return clf, graph, scores, accuracy
+
+
 if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
     print("dummy : ")
     print(dummy_classifier(kidney))
-    
