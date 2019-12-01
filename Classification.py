@@ -9,27 +9,16 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn import svm
 
-
-def make_meshgrid(datadict, h=.02):
+def log_reg(datadict) :
     """
-    Author: Romain N\n
-    Create a mesh of points to plot in
+    Author: Romain N\n   
+    Train and test Logistic Regression algorithm on the dataset contained in datadict
     
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
     
     Returns:
-        A REMPLIR ROMAIN
-    """
-    x_min, x_max = datadict.get("data").min() - 1, datadict.get("data").max() + 1
-    y_min, y_max = datadict.get("labels").min() - 1, datadict.get("labels").max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    return xx, yy
-
-def log_reg(datadict) :
-    """
-    DOCSTRING DE ROMAIN
+        Accuracy of Logistic regresion on the testing set
     """
     lr = LogisticRegression(solver = 'lbfgs',multi_class='auto')
     lr.fit(datadict.get("data_train"),datadict.get("label_train"))
@@ -57,5 +46,7 @@ def knn(datadict,n=30) :
 
 if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
-    print(knn(kidney))
-    print(knn(banknote))
+    print("Kidney knn: ",knn(kidney))
+    print("Kidney logistic regression: ", log_reg(kidney))
+    print("Banknote knn: ",knn(banknote))
+    print("Banknote logistic regression: ",log_reg(banknote))
