@@ -14,16 +14,14 @@ import graphviz
 style.use("ggplot")
 
 
-def create_tree(datadict, class_names=None,feature_names=None):
+def create_tree(datadict, class_names=None):
     """
     Author: Thomas K\n
     Builds a the best decision tree from a training set using GridSearchCV
 
     Args:
         datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
-        class_names :Names of each of the target classes in ascending numerical order
-        feature_names :Names of each of the features
-
+        class_names : names of the classes
     Returns:
         Decision tree fited with the training dataset, graph view of the tree
     """
@@ -33,8 +31,8 @@ def create_tree(datadict, class_names=None,feature_names=None):
     model = GridSearchCV(clf,parameters, cv = 5, refit = True)
     #Train tree
     model = model.fit(datadict.get("data_train"),datadict.get("label_train"))
-    #Create the graph view of the tree
-    dot_data = tree.export_graphviz(model.best_estimator_, out_file=None, filled=True,feature_names=feature_names, class_names=class_names)
+    #Create the graph view of the best estimator tree
+    dot_data = tree.export_graphviz(model.best_estimator_, out_file=None, filled=True, feature_names=datadict.get("names")[:-1], class_names=class_names)
     graph = graphviz.Source(dot_data)
     return model.best_estimator_, graph
 
@@ -69,7 +67,6 @@ def cross_validation_accuracy(datadict, classifier):
         Array of scores of the estimator for each run of the cross validation
     """
     scores = cross_val_score(classifier, datadict.get("data_train"), datadict.get("label_train"), cv=10)
-    print("Accuracy : %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
     return scores
 
 
@@ -92,20 +89,19 @@ def dummy_classifier(datadict):
     accuracy = metrics.accuracy_score(datadict.get("label_test"), label_pred)
     return accuracy
 
-def decisiontree_main(datadict,class_names=None, feature_names = None):
+def decisiontree_main(datadict, class_names):
     """
     Author: Thomas K\n
     Builds a decision tree and compute the accuracy
 
     Args:
         datadict : dictionary returned by Preprocessing.preprocessing_main
-        class_names :Names of each of the target classes in ascending numerical order
-        feature_names :Names of each of the features
+        class_names : names of the classes
 
     Returns:
         A decision tree fited with the training dataset, a graph view of the tree, the accuracy using cross validation, the accuracy without cross validation
     """
-    clf, graph = create_tree(datadict, class_names,feature_names)
+    clf, graph = create_tree(datadict, class_names)
     #Accuracy using cross validation
     scores = cross_validation_accuracy(datadict, clf)
     #Accuracy without cross validation
@@ -117,6 +113,12 @@ if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
     #print("dummy : ")
     #print(dummy_classifier(kidney))
-    _, _, scores, accuracy = decisiontree_main(kidney)
-    print(scores)
-    print(accuracy)
+    _, graph_kidney, scores_kidney, accuracy_kidney = decisiontree_main(kidney, ["cdk","notcdk"])
+    _, graph_banknote, scores_banknote, accuracy_banknote = decisiontree_main(banknote, ["0","1"])
+
+    print("Accuracy(with cross_validation) : %0.2f (+/- %0.2f)" % (scores_kidney.mean(), scores_kidney.std() * 2))
+    print("Accuracy(without cross_validation) : %0.2f" % accuracy_kidney.mean())
+    print("Accuracy(with cross_validation) : %0.2f (+/- %0.2f)" % (scores_banknote.mean(), scores_banknote.std() * 2))
+    print("Accuracy(without cross_validation) : %0.2f" % accuracy_banknote.mean())
+    graph_kidney.view()
+    graph_banknote.view()
