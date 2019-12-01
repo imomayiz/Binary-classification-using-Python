@@ -42,12 +42,12 @@ def main():
     
     #Classification
     print("Run kNN...")
-    kidney_knn_acc, kidney_knn_param  = knn(kidney)
-    kidney_pca_knn_acc, kidney_pca_knn_param  = knn(kidney_pca)
-    kidney_tsne_knn_acc, kidney_tsne_knn_param  = knn(kidney_tsne)
-    banknote_knn_acc, banknote_knn_param  = knn(banknote)
-    banknote_pca_knn_acc, banknote_pca_knn_param  = knn(banknote_pca)
-    banknote_tsne_knn_acc, banknote_tsne_knn_param  = knn(banknote_tsne)
+    kidney_knn_acc, kidney_knn_param  = Classification.knn(kidney)
+    kidney_pca_knn_acc, kidney_pca_knn_param  = Classification.knn(kidney_pca)
+    kidney_tsne_knn_acc, kidney_tsne_knn_param  = Classification.knn(kidney_tsne)
+    banknote_knn_acc, banknote_knn_param  = Classification.knn(banknote)
+    banknote_pca_knn_acc, banknote_pca_knn_param  = Classification.knn(banknote_pca)
+    banknote_tsne_knn_acc, banknote_tsne_knn_param  = Classification.knn(banknote_tsne)
     kidney_accuracies["kidney_knn"] = kidney_knn_acc
     kidney_accuracies["kidney_pca_knn"] = kidney_pca_knn_acc
     kidney_accuracies["kidney_tsne_knn"] = kidney_tsne_knn_acc
