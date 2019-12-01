@@ -1,5 +1,5 @@
-Neural Network module
-=====================
+Neural Network
+==============
 
 .. automodule:: neuralNetwork
    :members:

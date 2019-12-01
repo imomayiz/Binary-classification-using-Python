@@ -1,5 +1,5 @@
-Classification module
-=====================
+Easiest classification algorithms
+=================================
 
 .. automodule:: Classification
    :members:

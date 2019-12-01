@@ -11,7 +11,10 @@ Welcome to ml-project's documentation!
    :caption: Contents:
    
    Preprocessing.rst
-   modules.rst
    Classification.rst
    neuralNetwork.rst
+   DecisionTree.rst
+   random_forest.rst
+   main.rst
+   pca_visualisation.rst
 

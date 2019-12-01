@@ -1,68 +1,61 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 23 16:57:56 2019
-
-@author: Romain N
-"""
+#!/usr/bin/env python
+# coding: utf-8
 import Preprocessing
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn import datasets
-from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score
 from sklearn import svm
 
 
-
-iris = datasets.load_iris()
-X = iris.data  # Temporary dataset.
-y = iris.target 
-
-def make_meshgrid(x, y, h=.02):
+def make_meshgrid(datadict, h=.02):
     """
+    Author: Romain N\n
     Create a mesh of points to plot in
+    
+    Args:
+        datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
+    
+    Returns:
+        A REMPLIR ROMAIN
     """
-    x_min, x_max = x.min() - 1, x.max() + 1
-    y_min, y_max = y.min() - 1, y.max() + 1
+    x_min, x_max = datadict.get("data").min() - 1, datadict.get("data").max() + 1
+    y_min, y_max = datadict.get("labels").min() - 1, datadict.get("labels").max() + 1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
     return xx, yy
 
-def log_reg(X,y,n) :
-    pca = PCA(n_components=n)
-    pca.fit(X)
-    X = pca.transform(X)
-    
-    
-    
-    X_train,x_test,Y_train,y_test = train_test_split(X, y, test_size=0.3, random_state=1234)
+def log_reg(datadict) :
+    """
+    DOCSTRING DE ROMAIN
+    """
     lr = LogisticRegression(solver = 'lbfgs',multi_class='auto')
-    lr.fit(X_train,Y_train)
+    lr.fit(datadict.get("data_train"),datadict.get("label_train"))
     
-    return lr.score(x_test,y_test)
+    return lr.score(datadict.get("data_test"),datadict.get("label_test"))
     
-def knn(X,y,n) :
+def knn(datadict,n=30) :
+    """
+    Author: Romain N\n
+    Train and test kNN algorithm on the dataset contained in datadict, with n_neighbors up to n
+
+    Args:
+        datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
+        n: maximal int to try as n_neighbors
+    
+    Returns:
+        Accuracy of kNN on the testing set, best parameters found during grid search
+    """
     k = KNeighborsClassifier(n_neighbors = n)
-    X_train,x_test,Y_train,y_test = train_test_split(X, y, test_size=0.3, random_state=1234)
-    k.fit(X_train,Y_train)
-    
-    return k.score(x_test,y_test)
-
-def knn_perf() :
-    scores = [knn(X,y,i) for i in range(1,50)]
-    plt.scatter(range(1,50),scores)
-    return scores.index(max(scores)) +1
-
-
-def display2components(X,y) :
-    p = PCA(n_components=2)   
-    Xp = p.fit(X).transform(X)   
-    X0, X1 = Xp[:, 0], Xp[:, 1]
-    plt.scatter(X0,X1,c=y)
-    return
+    parameters = {'n_neighbors':[i for i in range(1,n)]}
+    model = GridSearchCV(k, parameters, cv=5, refit=True)
+    model.fit(datadict.get("data_train"),datadict.get("label_train"))
+    label_pred = model.predict(datadict.get("data_test"))
+    return accuracy_score(label_pred, datadict.get("label_test")), model.best_params_
 
 if __name__ == '__main__':
-    l,l2,l_pca,l2_pca,l_tsne,l2_tsne = Preprocessing.preprocessing_main()
-    print(l2)
+    kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
+    print(knn(kidney))
+    print(knn(banknote))
