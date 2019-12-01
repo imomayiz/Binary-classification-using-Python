@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 import Preprocessing
-from sklearn import svm
-from sklearn import datasets
 from sklearn import tree
 from sklearn import metrics
 from sklearn.dummy import DummyClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 import random
 from matplotlib import style
 from mpl_toolkits.mplot3d import Axes3D
@@ -16,7 +13,7 @@ import graphviz
 style.use("ggplot")
 
 
-def create_tree(datadict, class_names=None,feature_names=None criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+def create_tree(datadict, class_names=None,feature_names=None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
     """
     Author: Thomas K\n
     Builds a decision tree from a training set
@@ -96,7 +93,7 @@ def dummy_classifier(datadict):
     accuracy = metrics.accuracy_score(datadict.get("label_test"), label_pred)
     return accuracy
 
-def DecisionTreeMain(datadict,class_names=None, feature_names = None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
+def decisiontree_main(datadict,class_names=None, feature_names = None, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1):
     """
     Author: Thomas K\n
     Builds a decision tree and compute the accuracy
@@ -109,18 +106,22 @@ def DecisionTreeMain(datadict,class_names=None, feature_names = None, criterion=
         max_depth : int or None, maximum depth of the tree
         min_samples_split : int, the minimum number of samples required to split an internal node
         min_samples_leaf : int or float, the minimum number of samples required to be at a leaf node
+    
     Returns:
         A decision tree fited with the training dataset, a graph view of the tree, the accuracy using cross validation, the accuracy without cross validation
     """
     clf, graph = create_tree(datadict, class_names,feature_names, criterion=criterion, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf)
     #Accuracy using cross validation
-    scores = CrossValidationAccuracy(datadict, clf)
+    scores = cross_validation_accuracy(datadict, clf)
     #Accuracy without cross validation
-    accuracy = AccuracyTree(datadict, clf)
+    accuracy = accuracy_tree(datadict, clf)
     return clf, graph, scores, accuracy
 
 
 if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
-    print("dummy : ")
-    print(dummy_classifier(kidney))
+    #print("dummy : ")
+    #print(dummy_classifier(kidney))
+    _, _, scores, accuracy = decisiontree_main(kidney)
+    print(scores)
+    print(accuracy)
