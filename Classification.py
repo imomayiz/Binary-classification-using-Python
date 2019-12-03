@@ -7,7 +7,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
-from sklearn import svm
+from Preprocessing import preprocess_main
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report,confusion_matrix
 
 def log_reg(datadict) :
     """
@@ -43,6 +45,30 @@ def knn(datadict,n=30) :
     model.fit(datadict.get("data_train"),datadict.get("label_train"))
     label_pred = model.predict(datadict.get("data_test"))
     return accuracy_score(label_pred, datadict.get("label_test")), model.best_params_
+
+
+def SVM(X_train,y_train,X_test,y_test):
+    """
+    Author: Imane M\n
+    Implementation of Support vector machines algorithm using sklearn
+    
+    Args: training and test datasets (data and labels separated)
+    
+    Returns: confusion matrix and performance measure scores
+    """
+    model = SVC()
+    model.fit(X_train,y_train)
+    predictions = model.predict(X_test)
+    #param_grid = {'C': [0.1,1, 10, 100, 1000], 'gamma': [1,0.1,0.01,0.001,0.0001], 'kernel': ['rbf']}
+    #grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=1)
+    #grid.fit(X_train,y_train)
+    #grid.best_params_
+    #grid.best_estimator_
+    #grid_predictions = grid.predict(X_test)
+    performance = confusion_matrix(y_test,predictions),classification_report(y_test,predictions)
+    print(performance)
+    
+
 
 if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
