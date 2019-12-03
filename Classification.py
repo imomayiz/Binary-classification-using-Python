@@ -47,18 +47,18 @@ def knn(datadict,n=30) :
     return accuracy_score(label_pred, datadict.get("label_test")), model.best_params_
 
 
-def SVM(X_train,y_train,X_test,y_test):
+def SVM(datadict):
     """
     Author: Imane M\n
     Implementation of Support vector machines algorithm using sklearn
     
     Args: training and test datasets (data and labels separated)
     
-    Returns: confusion matrix and performance measure scores
+    Returns: accuracy of the model on the test set
     """
     model = SVC()
-    model.fit(X_train,y_train)
-    predictions = model.predict(X_test)
+    model.fit(datadict.get("data_train"),datadict.get("label_train"))
+    predictions = model.predict(datadict.get("data_test"))
     #param_grid = {'C': [0.1,1, 10, 100, 1000], 'gamma': [1,0.1,0.01,0.001,0.0001], 'kernel': ['rbf']}
     #grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=1)
     #grid.fit(X_train,y_train)
@@ -66,7 +66,7 @@ def SVM(X_train,y_train,X_test,y_test):
     #grid.best_estimator_
     #grid_predictions = grid.predict(X_test)
     performance = confusion_matrix(y_test,predictions),classification_report(y_test,predictions)
-    print(performance)
+    return(accuracy_score(predictions, datadict.get("label_test")))
     
 
 

@@ -68,14 +68,26 @@ def main():
     banknote_logreg_acc = Classification.log_reg(banknote)
     banknote_pca_logreg_acc = Classification.log_reg(banknote_pca)
     banknote_tsne_logreg_acc = Classification.log_reg(banknote_tsne)
-    kidney.accuracies["kidney_logreg"] = kidney_logreg_acc
-    kidney.accuracies["kidney_pca_logreg"] = kidney_pca_logreg_acc
-    kidney.accuracies["kidney_tsne_logreg"] = kidney_tsne_logreg_acc
-    banknote.accuracies["banknote_logreg"] = banknote_logreg_acc
-    banknote.accuracies["banknote_pca_logreg"] = banknote_pca_logreg_acc
-    banknote.accuracies["banknote_tsne_logreg"] = banknote_tsne_logreg_acc
+    kidney_accuracies["kidney_logreg"] = kidney_logreg_acc
+    kidney_accuracies["kidney_pca_logreg"] = kidney_pca_logreg_acc
+    kidney_accuracies["kidney_tsne_logreg"] = kidney_tsne_logreg_acc
+    banknote_accuracies["banknote_logreg"] = banknote_logreg_acc
+    banknote_accuracies["banknote_pca_logreg"] = banknote_pca_logreg_acc
+    banknote_accuracies["banknote_tsne_logreg"] = banknote_tsne_logreg_acc
 
-
+    print("Run SVM...")
+    kidney_svm_acc = Classification.SVM(kidney)
+    kidney_pca_svm_acc = Classification.SVM(kidney_pca)
+    kidney_tsne_svm_acc = Classification.SVM(kidney_tsne)
+    banknote_svm_acc = Classification.SVM(banknote)
+    banknote_pca_svm_acc = Classification.SVM(banknote_pca)
+    banknote_tsne_svm_acc = Classification.SVM(banknote_tsne)
+    kidney_accuracies["kidney_svm"] = kidney_svm_acc
+    kidney_accuracies["kidney_pca_svm"] = kidney_pca_svm_acc
+    kidney_accuracies["kidney_tsne_svm"] = kidney_tsne_svm_acc
+    banknote_accuracies["banknote_svm"] = banknote_svm_acc
+    banknote_accuracies["banknote_pca_svm"] = banknote_pca_svm_acc
+    banknote_accuracies["banknote_tsne_svm"] = banknote_tsne_svm_acc
     
     
     #Random Forest
@@ -92,7 +104,7 @@ def main():
     kidney_best_param = kidney_parameters.get(kidney_best_accuracy_name)
     banknote_best_param = banknote_parameters.get(banknote_best_accuracy_name)
     
-    print("-------------------------Kydney dataset-------------------------")
+    print("-------------------------Kidney dataset-------------------------")
     print("Best accuracy : "+str(kidney_best_accuracy))
     print("Obtained with : "+str(kidney_best_accuracy_name))
     print("Best parameters : "+str(kidney_best_param))
