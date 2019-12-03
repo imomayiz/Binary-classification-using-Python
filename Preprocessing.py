@@ -5,10 +5,62 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 import warnings
+import copy
 warnings.filterwarnings("ignore")
+
+def split_train_test(data, labels, test_size) :
+    """
+    Author: Karel Kedemos\n
+    Split arrays or matrices into random train and test subsets. 
+    The train and test sets keep the same percentages of each class of the original data set 
+    (sklearn.model_selection.train_test_split does not keep these percentages).
+    
+    Args:
+        data: numpy array or list of the dataset to split
+        labels : numpy array or list of the labelset to split
+        test_size : float between 0.0 and 1.0 that represent the proportion of the dataset to include in the test split
+
+    Returns:
+        4 arrays : the train dataset, the train labelset, the test dataset and the test labelset
+    """
+    n = len(labels)
+    list_labels = []
+    data_split = []
+    labels_split = []
+    for i in range(n) :
+        if labels[i] not in list_labels :
+            list_labels.append(labels[i])
+            data_split.append([data[i]])
+            labels_split.append([labels[i]])
+        else :
+            data_split[list_labels.index(labels[i])].append(data[i])
+            labels_split[list_labels.index(labels[i])].append(labels[i])
+    X_train_tot = []
+    X_test_tot = []
+    y_train_tot = []
+    y_test_tot = []
+
+    for i in range(len(list_labels)) :
+        X_train, X_test, y_train, y_test = split_train_test(data_split[i], labels_split[i], test_size = test_size)
+        X_train_tot += copy.deepcopy(X_train) 
+        X_test_tot += copy.deepcopy(X_test)
+        y_train_tot += copy.deepcopy(y_train)
+        y_test_tot += copy.deepcopy(y_test)
+
+    X_train_tot = np.array(X_train_tot)
+    X_test_tot = np.array(X_test_tot)
+    y_train_tot = np.array(y_train_tot)
+    y_test_tot = np.array(y_test_tot)
+
+    indexes_train = np.arange(len(X_train_tot))
+    indexes_test = np.arange(len(X_test_tot))
+
+    np.random.shuffle(indexes_train)
+    np.random.shuffle(indexes_test)
+
+    return X_train_tot[indexes_train], X_test_tot[indexes_test], y_train_tot[indexes_train], y_test_tot[indexes_test]
 
 def check_header(df):
     """
@@ -179,8 +231,8 @@ def preprocess_main(n_pca=2, n_tsne=2, test_size=0.25):
     l2 = preprocess(f2,[],[],[],[],names)
 
     #data split
-    X_train, X_test, y_train, y_test = train_test_split(l[0], l[1], test_size = test_size)
-    X2_train, X2_test, y2_train, y2_test = train_test_split(l2[0], l2[1], test_size = test_size)
+    X_train, X_test, y_train, y_test = split_train_test(l[0], l[1], test_size = test_size)
+    X2_train, X2_test, y2_train, y2_test = split_train_test(l2[0], l2[1], test_size = test_size)
     
     #PCA
     all_pca, train_pca, test_pca = pca(l[0], X_train, X_test, n_pca)
