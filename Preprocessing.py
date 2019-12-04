@@ -6,6 +6,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 import warnings
 import copy
 warnings.filterwarnings("ignore")
@@ -43,7 +44,7 @@ def split_train_test(data, labels, test_size) :
     y_test_tot = []
 
     for i in range(len(list_labels)) :
-        X_train, X_test, y_train, y_test = split_train_test(data_split[i], labels_split[i], test_size = test_size)
+        X_train, X_test, y_train, y_test = train_test_split(data_split[i], labels_split[i], test_size = test_size)
         X_train_tot += copy.deepcopy(X_train) 
         X_test_tot += copy.deepcopy(X_test)
         y_train_tot += copy.deepcopy(y_train)
