@@ -30,8 +30,8 @@ def neuralNetwork(datadict, nbneurons, epochs) :
     model.add(Dense(1, activation = "sigmoid", kernel_initializer = 'random_normal'))
 
     model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-    model.fit(datadict.get("data_train"), datadict.get("label_train"), epochs = epochs)
-    test_loss, test_acc = model.evaluate(datadict.get("data_test"), datadict.get("label_test"))
+    model.fit(datadict.get("data_train"), datadict.get("label_train"), epochs = epochs, verbose=0)
+    test_loss, test_acc = model.evaluate(datadict.get("data_test"), datadict.get("label_test"), verbose=0)
 
     return model, test_acc
 

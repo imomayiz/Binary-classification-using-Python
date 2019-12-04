@@ -17,7 +17,7 @@ def rdforest(datadict):
     Returns:
         Accuracy of random forest algorithm on the testing set, best parameters found during grid search
     """
-    parameters = {'n_estimators':[10,100,200], 'criterion':('gini','entropy'), 'max_depth':(3,6,10,1000), 'min_samples_split':(2,4,6,10,15), 'min_samples_leaf':[1,2,4]}
+    parameters = {'n_estimators':[10,100,200], 'criterion':('gini','entropy'), 'max_depth':(5,10,100), 'min_samples_split':(2,4,6), 'min_samples_leaf':[1,3], "max_samples": [0.5, 1.0]}
     rf = RandomForestClassifier()
     gs = GridSearchCV(rf, parameters, cv=5, refit=True)
     gs.fit(datadict.get("data_train"),datadict.get("label_train"))
