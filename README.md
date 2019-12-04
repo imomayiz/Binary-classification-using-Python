@@ -6,7 +6,7 @@
 In this project, we aim to apply different machine learning models onto two different datasets for binary classification. However, our scripts 
 are factorized a minimim possible and can be applied to different datasets.
 
-## Algorithms
+## Methodology
 
 ### Preprocessing
 
@@ -25,20 +25,22 @@ The models are: CART, KNN, SVM and Log regression
 
 ### Improved Classifiers
 
-Contains following models:
-SVM - KNN - Log regression 
-Here, we improve our models by looking for the parameters that maximize the accuracy. 
-```
-Give an example
-```
+Contains the following models:
+* SVM
+* KNN 
+* Log regression
+* Stochastic gradient descent
+* Decision Trees
+* Random Forest
 
-### And coding style tests
+Here, we improve our models by looking for the parameters that maximize the accuracy across multiple validation sets. 
 
-Explain what these tests test and why
+### Classification using Neural Networks
 
-```
-Give an example
-```
+
+
+
+
 
 
 
