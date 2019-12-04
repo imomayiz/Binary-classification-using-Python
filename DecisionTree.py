@@ -14,7 +14,7 @@ import graphviz
 style.use("ggplot")
 
 
-def create_tree(datadict, class_names=None):
+def create_tree(datadict):
     """
     Author: Thomas K\n
     Builds a the best decision tree from a training set using GridSearchCV
@@ -32,7 +32,7 @@ def create_tree(datadict, class_names=None):
     #Train tree
     model = model.fit(datadict.get("data_train"),datadict.get("label_train"))
     #Create the graph view of the best estimator tree
-    dot_data = tree.export_graphviz(model.best_estimator_, out_file=None, filled=True, feature_names=datadict.get("names")[:-1], class_names=class_names)
+    dot_data = tree.export_graphviz(model.best_estimator_, out_file=None, filled=True, feature_names=datadict.get("names")[:-1], class_names=datadict.get("class_possibilities"))
     graph = graphviz.Source(dot_data)
     return model.best_estimator_, graph
 
@@ -89,7 +89,7 @@ def dummy_classifier(datadict):
     accuracy = metrics.accuracy_score(datadict.get("label_test"), label_pred)
     return accuracy
 
-def decisiontree_main(datadict, class_names):
+def decisiontree_main(datadict):
     """
     Author: Thomas K\n
     Builds a decision tree and compute the accuracy
@@ -101,7 +101,7 @@ def decisiontree_main(datadict, class_names):
     Returns:
         A decision tree fited with the training dataset, a graph view of the tree, the accuracy using cross validation, the accuracy without cross validation
     """
-    clf, graph = create_tree(datadict, class_names)
+    clf, graph = create_tree(datadict)
     #Accuracy using cross validation
     scores = cross_validation_accuracy(datadict, clf)
     #Accuracy without cross validation
@@ -113,8 +113,8 @@ if __name__ == '__main__':
     kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne = Preprocessing.preprocess_main()
     #print("dummy : ")
     #print(dummy_classifier(kidney))
-    _, graph_kidney, scores_kidney, accuracy_kidney = decisiontree_main(kidney, ["cdk","notcdk"])
-    _, graph_banknote, scores_banknote, accuracy_banknote = decisiontree_main(banknote, ["0","1"])
+    _, graph_kidney, scores_kidney, accuracy_kidney = decisiontree_main(kidney)
+    _, graph_banknote, scores_banknote, accuracy_banknote = decisiontree_main(banknote)
 
     print("Accuracy(with cross_validation) : %0.2f (+/- %0.2f)" % (scores_kidney.mean(), scores_kidney.std() * 2))
     print("Accuracy(without cross_validation) : %0.2f" % accuracy_kidney.mean())
