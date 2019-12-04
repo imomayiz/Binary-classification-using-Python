@@ -86,16 +86,16 @@ def main_dico(datadict, datadict_pca, datadict_tsne):
     parameters["randomforest_tsne"] = randomforest_param_tsne
     
     print("Run decision tree...")
-    _, _, decision_tree_acc, _ = DecisionTree.decisiontree_main(datadict)
-    accuracies["decision_tree"] = decision_tree_acc
+    _, _, decision_tree_acc_list, _ = DecisionTree.decisiontree_main(datadict)
+    accuracies["decision_tree"] = max(decision_tree_acc_list)
     parameters["decision_tree"] = "No parameters for this algorithm"
+    print("Done.\n")
     
     #Take the biggest accuracy, algorithm name and parameters
     best_accuracy = max(accuracies.values())
     best_accuracy_name = max(accuracies, key=accuracies.get)
     best_param = parameters.get(best_accuracy_name)
     
-    print("Done.\n")
     print("---Results for "+datadict.get("dataset_name")+" dataset---")
     print("Best accuracy : "+str(best_accuracy))
     print("Obtained with : "+str(best_accuracy_name))

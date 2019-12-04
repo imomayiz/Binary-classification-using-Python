@@ -255,7 +255,7 @@ def preprocess_main(n_pca=2, n_tsne=2, test_size=0.25):
     banknote_pca = {"data": all_pca2, "labels": l2[1], "names": feature_names_pca, "data_train": train_pca2, "data_test": test_pca2, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote_pca", "class_possibilities": ["0","1"]}
     
     kidney_tsne = {"data": all_tsne, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne, "data_test": test_tsne, "label_train": y_train, "label_test": y_test, "dataset_name": "kidney_tsne", "class_possibilities": ["cdk","notcdk"]}
-    banknote_tsne = {"data": all_tsne2, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne2, "data_test": test_tsne2, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote_tsne", "class_possibilities": ["0","1"]}
+    banknote_tsne = {"data": all_tsne2, "labels": l2[1], "names": feature_names_tsne, "data_train": train_tsne2, "data_test": test_tsne2, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote_tsne", "class_possibilities": ["0","1"]}
     
     return kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne
 
