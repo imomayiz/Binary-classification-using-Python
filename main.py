@@ -17,7 +17,7 @@ def main():
     banknote_accuracies = {}
     kidney_parameters = {}
     banknote_parameters = {}
-    
+
     #Neural network
     print("Run neural networks...")
     param_grid = {"nbneurons" : [[4,12,8], [16,32,24,12], [32,64,16,8]], "epochs" : [100,200,300]}
@@ -39,7 +39,7 @@ def main():
     banknote_parameters["banknote_nn"] = banknote_nn_param
     banknote_parameters["banknote_pca_nn"] = banknote_pca_nn_param
     banknote_parameters["banknote_tsne_nn"] = banknote_tsne_nn_param
-    
+
     #Classification
     print("Run kNN...")
     kidney_knn_acc, kidney_knn_param  = Classification.knn(kidney)
@@ -60,7 +60,7 @@ def main():
     banknote_parameters["banknote_knn"] = banknote_knn_param
     banknote_parameters["banknote_pca_knn"] = banknote_pca_knn_param
     banknote_parameters["banknote_tsne_knn"] = banknote_tsne_knn_param
-    
+
     print("Run logistic regression...")
     kidney_logreg_acc = Classification.log_reg(kidney)
     kidney_pca_logreg_acc = Classification.log_reg(kidney_pca)
@@ -88,14 +88,32 @@ def main():
     banknote_accuracies["banknote_svm"] = banknote_svm_acc
     banknote_accuracies["banknote_pca_svm"] = banknote_pca_svm_acc
     banknote_accuracies["banknote_tsne_svm"] = banknote_tsne_svm_acc
-    
-    
-    #Random Forest
-    #A faire
-    
+
+
+    print("Run decision tree...")
+    _, decision_tree_graph_kidney, decision_tree_scores_kidney, decision_tree_accuracy_kidney = DecisionTree.decisiontree_main(kidney, ["cdk","notcdk"])
+    _, decision_tree_graph_banknote, decision_tree_scores_banknote, decision_tree_accuracy_banknote = DecisionTree.decisiontree_main(banknote, ["0","1"])
+    kidney_accuracies["kidney_decision_tree"] = decision_tree_scores_kidney
+    banknote_accuracies["banknote_decision_tree"] = decision_tree_scores_banknote
+    '''
+    pca, tnse pas trop d'interet pour decision tree + marche pas car nombre de features renvoyes par presprocessing pas modifie pour pca et tnse
+
+    _, decision_tree_graph_kidney_pca, decision_tree_scores_kidney_pca, decision_tree_accuracy_kidney_pca = DecisionTree.decisiontree_main(kidney_pca, ["cdk","notcdk"])
+    _, decision_tree_graph_kidney_tnse, decision_tree_scores_kidney_tnse, decision_tree_accuracy_kidney_tnse = DecisionTree.decisiontree_main(kidney_tnse, ["cdk","notcdk"])
+    _, decision_tree_graph_banknote_pca, decision_tree_scores_banknote_pca, decision_tree_accuracy_banknote_pca = DecisionTree.decisiontree_main(banknote_pca, ["0","1"])
+    _, decision_tree_graph_banknote_tnse, decision_tree_scores_banknote_tnse, decision_tree_accuracy_banknote_tnse = DecisionTree.decisiontree_main(banknote_tnse, ["0","1"])
+    kidney_accuracies["kidney_pca_decision_tree"] = decision_tree_scores_kidney_pca
+    kidney_accuracies["kidney_tsne_decision_tree"] = decision_tree_scores_kidney_tnse
+    banknote_accuracies["banknote_pca_decision_tree"] = decision_tree_scores_banknote_pca
+    banknote_accuracies["banknote_tsne_decision_tree"] = banknote_tsne_decision_tree_acc
+    '''
+
+
+
+
     #Decision Tree
     #A faire quand le code de Thomas sera OK
-    
+
     #Take the biggest accuracy, algorithm name and parameters
     kidney_best_accuracy = max(kidney_accuracies.values())
     banknote_best_accuracy = max(banknote_accuracies.values())
@@ -103,7 +121,7 @@ def main():
     banknote_best_accuracy_name = max(banknote_accuracies, key=banknote_accuracies.get)
     kidney_best_param = kidney_parameters.get(kidney_best_accuracy_name)
     banknote_best_param = banknote_parameters.get(banknote_best_accuracy_name)
-    
+
     print("-------------------------Kidney dataset-------------------------")
     print("Best accuracy : "+str(kidney_best_accuracy))
     print("Obtained with : "+str(kidney_best_accuracy_name))
