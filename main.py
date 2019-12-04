@@ -20,7 +20,7 @@ def main():
     
     #Neural network
     print("Run neural networks...")
-    param_grid = {"nbneurons" : [[1], [5,6,7,8], [32,64,16,8]], "epochs" : [100,200,300]}
+    param_grid = {"nbneurons" : [[4,12,8], [16,32,24,12], [32,64,16,8]], "epochs" : [100,200,300]}
     _, kidney_nn_param, kidney_nn_acc = neuralNetwork.neuralNetworkGridSearch(kidney,param_grid)
     _, kidney_pca_nn_param, kidney_pca_nn_acc = neuralNetwork.neuralNetworkGridSearch(kidney_pca,param_grid)
     _, kidney_tsne_nn_param, kidney_tsne_nn_acc = neuralNetwork.neuralNetworkGridSearch(kidney_tsne,param_grid)

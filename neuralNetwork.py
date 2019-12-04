@@ -67,7 +67,7 @@ if __name__ == '__main__':
     data = kidney
     
     model, test_acc = neuralNetwork(data, [32,64,16,8], 300)
-    param_grid = {"nbneurons" : [[1], [5,6,7,8], [32,64,16,8]], "epochs" : [100,200,300]}
+    param_grid = {"nbneurons" : [[4,12,8], [16,32,24,12], [32,64,16,8]], "epochs" : [100,200,300]}
     best_model, best_params, best_test_acc = neuralNetworkGridSearch(data, param_grid)
     print(best_params)
     print(best_test_acc)
