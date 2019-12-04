@@ -1,38 +1,35 @@
 # ML-project
 # Binary classification
 
+#Brief description
+
 In this project, we aim to apply different machine learning models onto two different datasets for binary classification. However, our scripts 
 are factorized a minimim possible and can be applied to different datasets.
 
+#Algorithms
+
+##Preprocessing
 
 ```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
+-Loads datasets
+-Cleans data
+-Splits datasets into training and test datasets
+-Additionnaly to cleaned data, outputs datasets on which we operated either tsne or PCA
 ```
 
-And repeat
+##Classification models comparison
 
 ```
-until finished
+We compare the performance of different models on the test datasets.
+The models are: CART, KNN, SVM and Log regression
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+##Improved Classifiers
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+```
+Contains following models:
+SVM - KNN - Log regression 
+Here, we improve our models by looking for the parameters that maximize the accuracy. 
 ```
 Give an example
 ```
