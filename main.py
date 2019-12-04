@@ -111,8 +111,8 @@ def main():
 
 
 
-    #Decision Tree
-    #A faire quand le code de Thomas sera OK
+    #Random_forest
+    #A faire
 
     #Take the biggest accuracy, algorithm name and parameters
     kidney_best_accuracy = max(kidney_accuracies.values())
