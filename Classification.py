@@ -51,9 +51,11 @@ def SVM(datadict):
     Author: Imane M\n
     Implementation of Support vector machines algorithm using sklearn
     
-    Args: training and test datasets (data and labels separated)
+    Args:
+        datadict: dictionary returned by function "preprocessing_main" in Preprocessing.py
     
-    Returns: accuracy of the model on the test set
+    Returns: 
+        Accuracy of the model on the test set
     """
     param_grid = {'C': [0.1,1, 10, 100], 'gamma': [1,0.1,0.01,0.001], 'kernel': ['rbf','poly']}
     grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=1)
