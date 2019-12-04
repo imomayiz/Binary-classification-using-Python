@@ -1,14 +1,14 @@
 # ML-project
 # Binary classification
 
-##Brief description
+## Brief description
 
 In this project, we aim to apply different machine learning models onto two different datasets for binary classification. However, our scripts 
 are factorized a minimim possible and can be applied to different datasets.
 
-##Algorithms
+## Algorithms
 
-###Preprocessing
+### Preprocessing
 
 -Loads datasets
 -Cleans data
@@ -16,14 +16,14 @@ are factorized a minimim possible and can be applied to different datasets.
 -Additionnaly to cleaned data, outputs datasets on which we operated either tsne or PCA
 
 
-###Classification models comparison
+### Classification models comparison
 
 
 We compare the performance of different models on the test datasets.
 The models are: CART, KNN, SVM and Log regression
 
 
-###Improved Classifiers
+### Improved Classifiers
 
 Contains following models:
 SVM - KNN - Log regression 
