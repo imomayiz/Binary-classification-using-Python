@@ -10,10 +10,10 @@ are factorized a minimim possible and can be applied to different datasets.
 
 ### Preprocessing
 
--Loads datasets
--Cleans data
--Splits datasets into training and test datasets
--Additionnaly to cleaned data, outputs datasets on which we operated either tsne or PCA
+* Loads datasets
+* Cleans data
+* Splits datasets into training and test datasets
+* Additionnaly to cleaned data, outputs datasets on which we operated either tsne or PCA
 
 
 ### Classification models comparison
