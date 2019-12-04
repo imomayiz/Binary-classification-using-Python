@@ -212,7 +212,9 @@ def preprocess_main(n_pca=2, n_tsne=2, test_size=0.25):
     -data_train : numpy array with data from training set without labels\n
     -label_train : label list from training dataset\n
     -data_test : numpy array with data from testing set without labels\n
-    -label_test : label list from testing dataset
+    -label_test : label list from testing dataset\n
+    -dataset_name : name of the dataset (for automatisation only)\n
+    -class_possibilities : list of strings with class possibilities (for decision tree plotting only)
     
     Returns:
         kidney dictionary, banknote dictionary, kidney pca dictionary, banknote pca dictionary, sidney t-sne dictionary, banknote t-sne dictionary
@@ -246,14 +248,14 @@ def preprocess_main(n_pca=2, n_tsne=2, test_size=0.25):
     feature_names_tsne = ["feature_"+str(i) for i in range(1,n_tsne+1)]
     
     #parse into dictonnaries
-    kidney = {"data": l[0], "labels": l[1], "names": l[2], "data_train": X_train, "data_test": X_test, "label_train": y_train, "label_test": y_test}
-    banknote = {"data": l2[0], "labels": l2[1], "names": l2[2], "data_train": X2_train, "data_test": X2_test, "label_train": y2_train, "label_test": y2_test}
+    kidney = {"data": l[0], "labels": l[1], "names": l[2], "data_train": X_train, "data_test": X_test, "label_train": y_train, "label_test": y_test, "dataset_name": "kidney", "class_possibilities": ["cdk","notcdk"]}
+    banknote = {"data": l2[0], "labels": l2[1], "names": l2[2], "data_train": X2_train, "data_test": X2_test, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote", "class_possibilities": ["0","1"]}
     
-    kidney_pca = {"data": all_pca, "labels": l[1], "names": feature_names_pca, "data_train": train_pca, "data_test": test_pca, "label_train": y_train, "label_test": y_test}
-    banknote_pca = {"data": all_pca2, "labels": l2[1], "names": feature_names_pca, "data_train": train_pca2, "data_test": test_pca2, "label_train": y2_train, "label_test": y2_test}
+    kidney_pca = {"data": all_pca, "labels": l[1], "names": feature_names_pca, "data_train": train_pca, "data_test": test_pca, "label_train": y_train, "label_test": y_test, "dataset_name": "kidney_pca", "class_possibilities": ["cdk","notcdk"]}}
+    banknote_pca = {"data": all_pca2, "labels": l2[1], "names": feature_names_pca, "data_train": train_pca2, "data_test": test_pca2, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote_pca", "class_possibilities": ["0","1"]}}
     
-    kidney_tsne = {"data": all_tsne, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne, "data_test": test_tsne, "label_train": y_train, "label_test": y_test}
-    banknote_tsne = {"data": all_tsne2, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne2, "data_test": test_tsne2, "label_train": y2_train, "label_test": y2_test}
+    kidney_tsne = {"data": all_tsne, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne, "data_test": test_tsne, "label_train": y_train, "label_test": y_test, "dataset_name": "kidney_tsne", "class_possibilities": ["cdk","notcdk"]}}
+    banknote_tsne = {"data": all_tsne2, "labels": l[1], "names": feature_names_tsne, "data_train": train_tsne2, "data_test": test_tsne2, "label_train": y2_train, "label_test": y2_test, "dataset_name": "banknote_tsne", "class_possibilities": ["0","1"]}}
     
     return kidney, banknote, kidney_pca, banknote_pca, kidney_tsne, banknote_tsne
 
