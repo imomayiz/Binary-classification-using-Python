@@ -102,7 +102,7 @@ def main_dico(datadict, datadict_pca, datadict_tsne):
     print("Best parameters : "+str(best_param))
     print("Every accuracy : ")
     for name in accuracies.keys():
-        print("    "+ name + " : " + str(accuracies.get(name)))
+        print("    "+ name + " : " + str(accuracies.get(name)) + " ; with parameters : "+str(parameters.get(name)))
     print(" ")
 
 def main():
