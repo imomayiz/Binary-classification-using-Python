@@ -3,8 +3,7 @@
 
 ## Brief description
 
-In this project, we aim to apply different machine learning models onto two different datasets for binary classification. However, our scripts 
-are factorized in so far as they can be applied to different datasets.
+In this project, we aim to apply different machine learning models onto two different datasets for binary classification. However, our scripts can be applied to different datasets.
 
 ## Algorithms
 
